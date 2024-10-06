@@ -4,6 +4,13 @@ const port = 3000;
 
 app.use(express.json());
 
+app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+        return res.redirect('https://' + req.headers.host + req.url);
+    }
+    next();
+});
+
 let todos = [];
 
 app.get('/', (req, res) => {
